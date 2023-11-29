@@ -33,3 +33,10 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+//Ruta protegida por el middleware CheckPermission que otorga permiso solo al rol admin
+Route::middleware(['App\Http\Middleware\CheckPermission:admin'])->group(function () {
+    Route::resource('users', UsersController::class);
+    Route::resource('roles', RolesController::class);
+    Route::get('permisos', [Seguridad\PermisosController::class, 'index'])->name('permisos.index');
+});
