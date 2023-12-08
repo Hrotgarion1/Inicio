@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Seguridad;
 use Inertia\Inertia;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComponenteController;
