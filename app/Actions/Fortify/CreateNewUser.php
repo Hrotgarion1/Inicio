@@ -26,10 +26,22 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return User::create([
+        //Nuevo, para que cada nuevo usuario que se registre por defecto tenga el rol de invitado
+        $created_user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-        ]);
+                ]);
+
+                // Verifica si el formulario proporciona roles
+                if (isset($input['role'])) {
+                     // Asigna roles específicos del formulario
+                    $created_user->assignRole($input['role']);
+                 } else {
+                    // Si no hay roles específicos, asigna el rol de invitado por defecto
+                    $created_user->assignRole('invitado');
+        }
+
+                return $created_user;
     }
 }
