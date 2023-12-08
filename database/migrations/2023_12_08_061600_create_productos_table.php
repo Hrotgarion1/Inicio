@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('util',10);
             $table->string('sitio',40);
             $table->text('descript',200);
-            $table->unsignedBigInteger('attachment_id')->nullable();
-            $table->foreign('attachment_id')->references('id')->on('product_attachments')->onDelete('cascade');
             $table->timestamps();
         });
     }
