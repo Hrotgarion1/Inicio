@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'TcxStocks') }}</title>
+        <title inertia>TcxStocks</title>
 
         <!-- iconos -->
         <link rel="icon" href="/favicon.ico" sizes="16x16" type="image/x-icon">
