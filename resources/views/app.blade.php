@@ -16,6 +16,10 @@
         <link rel="icon" href="/ms-icon-144x144.png" sizes="144x144" type="image/png">
         <link rel="icon" href="/ms-icon-150x150.png" sizes="150x150" type="image/png">
         <link rel="icon" href="/ms-icon-310x310.png" sizes="310x310" type="image/png">
+        <link rel="icon" href="/apple-icon-57x57.png" sizes="57x57" type="image/png">
+        <link rel="icon" href="/apple-icon-60x60.png" sizes="60x60" type="image/png">
+        <link rel="icon" href="/apple-icon-72x72.png" sizes="72x72" type="image/png">
+        <link rel="icon" href="/apple-icon-76x76.png" sizes="76x76" type="image/png">
 
 
         <!-- Fonts -->
