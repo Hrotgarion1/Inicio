@@ -84,14 +84,14 @@ const showCanvanAlert = () => {
                 <div class="p-4 bg-green-100 overflow-hidden shadow-sm sm:rounded-lg">
                     <form @submit.prevent="handleSubmit"
                     class="mt-6 space-y-6 max-w-xl">
-                    <InputLabel for="code" :value="$t('Code')"></InputLabel>
-                    <TextInput id="code" v-model="form.code" autofocus required
+                    <InputLabel v-if="$page.props.user.permissions.includes('eliminar producto')" for="code" :value="$t('Code')"></InputLabel>
+                    <TextInput v-if="$page.props.user.permissions.includes('eliminar producto')" id="code" v-model="form.code" autofocus required
                     type="text"
                     class="mt-1 block w-full"></TextInput>
                     <InputError :message="form.errors.code" class="mt-2"></InputError>
 
-                    <InputLabel for="name" :value="$t('Name')"></InputLabel>
-                    <TextInput id="name" v-model="form.name" autofocus required
+                    <InputLabel v-if="$page.props.user.permissions.includes('eliminar producto')" for="name" :value="$t('Name')"></InputLabel>
+                    <TextInput v-if="$page.props.user.permissions.includes('eliminar producto')" id="name" v-model="form.name" autofocus required
                     type="text"
                     class="mt-1 block w-full"></TextInput>
                     <InputError :message="form.errors.name" class="mt-2"></InputError>
