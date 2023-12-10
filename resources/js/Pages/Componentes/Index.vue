@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted, onBeforeUnmount, ref, watch, defineProps } from 'vue';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -9,14 +10,12 @@ import SelectInput from "@/Components/SelectInput.vue";
 import WarningButton from "@/Components/WarningButton.vue";
 import Modal from "@/Components/Modal.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { nextTick, ref } from "vue";
+import { nextTick } from "vue";
 import Swal from "sweetalert2";
-import VueTailwindPagination from "@ocrv/vue-tailwind-pagination";
 import LaraDashPagination from "@/Components/Pagination.vue";
 import LaraDashTable from "@/Components/Table.vue";
 
 //Buscador
-import { watch, defineProps } from "vue";
 import { router } from "@inertiajs/vue3";
 
 //El prop de filters es para el buscador y el de comp es para las alertas
@@ -57,6 +56,21 @@ const formPage = useForm({});
 const onPageClick = (event) => {
     formPage.get(route("componentes.index", { page: event }));
 };
+
+// Añadir lógica para isMobile
+const isMobile = ref(window.innerWidth <= 768);
+
+const handleResize = () => {
+    isMobile.value = window.innerWidth <= 768;
+};
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', handleResize);
+});
 const openModal = (op, code, name, cant, ubica, stock, componente) => {
     modal.value = true;
     nextTick(() => nameInput.value.focus());
@@ -168,13 +182,18 @@ const deleteComponente = (id, name) => {
         </template>
 
         <div class="py-1">
-            <div
-                v-if="$page.props.user.permissions.includes('crear componente')"
-                class="bg-white grid v-screen place-items-center overflow-x-auto mx-auto sm:px-6 lg:px-8"
-            >
-                <div
-                    class="bg-green-100 grid grid-cols-1 sm:grid-cols-2 py-4 px-4 sm:px-8 place-items-center overflow-hidden m-5 shadow-lg rounded-2xl"
+            <div class="bg-white grid v-screen place-items-center overflow-x-auto mx-auto sm:px-6 lg:px-8">
+            <div v-if="$page.props.user.permissions.includes('crear componente')" class="bg-white grid v-screen place-items-center overflow-x-auto mx-auto sm:px-6 lg:px-8">
+                <div class="bg-green-100 grid grid-cols-1 sm:grid-cols-2 py-4 px-4 sm:px-8 place-items-center overflow-hidden m-5 shadow-lg rounded-2xl"
                 >
+
+                <div class="mt-3 mb-4 flex justify-self-star">
+                        <PrimaryButton @click="openModal(1)">
+                            <i class="fa-solid fa-plus-circle">
+                                <span class="ml-2">{{ $t("Add") }}</span></i
+                            >
+                        </PrimaryButton>
+                    </div>
                     <div class="mt-3 mb-4">
                         <input
                             type="text"
@@ -184,13 +203,7 @@ const deleteComponente = (id, name) => {
                         />
                     </div>
 
-                    <div class="mt-3 mb-4 flex justify-self-end">
-                        <PrimaryButton @click="openModal(1)">
-                            <i class="fa-solid fa-plus-circle">
-                                <span class="ml-2">{{ $t("Add") }}</span></i
-                            >
-                        </PrimaryButton>
-                    </div>
+                    
                 </div>
             </div>
 
@@ -208,12 +221,71 @@ const deleteComponente = (id, name) => {
                     </div>
                 </div>
             </div>
-            <div
-                v-if="
-                    $page.props.user.permissions.includes('eliminar componente')
-                "
-                class="bg-white grid v-screen place-items-center overflow-x-auto mx-auto sm:px-6 lg:px-8"
-            >
+            <div v-if="isMobile">
+
+            <div v-for="(comp, i) in componentes?.data || []" :key="comp.id">
+      <div class="max-w-sm mb-6 text-xs bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div class="flex bg-green-100 pb-2">
+            <a class="ml-2 mt-2">
+            <img :src="'/storage/img/LOGOR3.png'" alt="logo" width="100">
+        </a>
+        <div class="mt-8 ml-2">
+            <p>
+            <h5 class="mb-2 mr-2 font-bold tracking-tight text-gray-900 dark:text-white">{{$t('LOCATION')}}</h5>
+        </p>
+        <p>{{ comp.ubica }}</p>
+        </div>
+        
+        </div>
+        
+        <div class="p-5">
+        <div class="flex">
+            <div class="flex w-1/2">
+            <p>
+              <h5 class="mb-2 mr-2 font-bold tracking-tight text-gray-900 dark:text-white">{{$t('CODE')}}</h5>
+            </p>
+            <p>{{ comp.code }}</p>
+          </div>
+          <div class="flex w-1/2">
+            <p>
+              <h5 class="mb-2 mr-2 font-bold tracking-tight text-gray-900 dark:text-white">{{$t('NAME')}}</h5>
+            </p>
+            <p>{{ comp.name }}</p>
+          </div>
+        </div>
+        <span v-if="comp.cant <= comp.stock" style="color: red; font-weight: bold;"> {{$t('¡Canvan!')}}</span>
+        <div class="flex">
+            <div class="flex w-1/2">
+            <p>
+              <h5 class="mb-2 mr-2 font-bold tracking-tight text-gray-900 dark:text-white">{{$t('AMOUNT')}}</h5>
+            </p>
+            
+            <p>{{ comp.cant }}</p>
+          </div>
+          <div class="flex w-1/2">
+            <p>
+              <h5 class="mb-2 mr-2 font-bold tracking-tight text-gray-900 dark:text-white">{{$t('MINIMUM STOCK')}}</h5>
+            </p>
+            <p>{{ comp.stock }}</p>
+          </div>
+        </div>
+        </div>
+        <div class="flex p-2 bg-blue-100 justify-end">
+            <!-- Enlaces para editar y eliminar -->
+            <a @click="setCurrentComp(comp); openModal(2,comp.code,comp.name,comp.cant,comp.ubica,comp.stock,comp.id);" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              <i class="fa-solid fa-edit"></i>
+            </a>
+            <a v-if="$page.props.user.permissions.includes('eliminar componente')" @click="deleteComponente(comp.id, comp.name)" class="inline-flex ml-10 items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+              <i class="fa-solid fa-trash"></i>
+            </a>
+          </div>
+      </div>
+    </div>
+            
+            </div>
+
+            <div v-else>
+                <div v-if="$page.props.user.permissions.includes('eliminar componente')" class="bg-white grid v-screen place-items-center overflow-x-auto mx-auto sm:px-6 lg:px-8">
                 <LaraDashTable>
                     <template #col>
                         <th class="px-2 py-2">{{ $t("CODE") }}</th>
@@ -253,19 +325,7 @@ const deleteComponente = (id, name) => {
                             </td>
                             <td class="border border-gray-400 px-2 py-2">
                                 <WarningButton
-                                    @click="
-                                        setCurrentComp(comp);
-                                        openModal(
-                                            2,
-                                            comp.code,
-                                            comp.name,
-                                            comp.cant,
-                                            comp.ubica,
-                                            comp.stock,
-                                            comp.id
-                                        );
-                                    "
-                                >
+                                    @click="setCurrentComp(comp); openModal(2,comp.code,comp.name,comp.cant,comp.ubica,comp.stock,comp.id);">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
@@ -291,10 +351,7 @@ const deleteComponente = (id, name) => {
                 </LaraDashTable>
             </div>
 
-            <div
-                v-else
-                class="bg-white grid v-screen place-items-center overflow-x-auto mx-auto sm:px-6 lg:px-8"
-            >
+            <div v-else class="bg-white grid v-screen place-items-center overflow-x-auto mx-auto sm:px-6 lg:px-8">
                 <LaraDashTable>
                     <template #col>
                         <th class="px-2 py-2">{{ $t("CODE") }}</th>
@@ -361,6 +418,9 @@ const deleteComponente = (id, name) => {
                     </template>
                 </LaraDashTable>
             </div>
+        </div>
+            </div>
+            
         </div>
         <Modal :show="modal" @close="closeModal">
             <h2 class="bg-green-200 p-3 text-lg font.medium text-hray-900 justify-center">{{ title }}</h2>
