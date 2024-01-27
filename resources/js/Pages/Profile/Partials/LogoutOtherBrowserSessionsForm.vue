@@ -79,7 +79,7 @@ const closeModal = () => {
                             <div class="text-xs text-gray-500">
                                 {{ session.ip_address }},
 
-                                <span v-if="session.is_current_device" class="text-green-500 font-semibold">This device</span>
+                                <span v-if="session.is_current_device" class="text-green-500 font-semibold">{{$t('This device')}}</span>
                                 <span v-else>{{$t('Last active')}} {{ session.last_active }}</span>
                             </div>
                         </div>
@@ -104,7 +104,7 @@ const closeModal = () => {
                 </template>
 
                 <template #content>
-                    Ingrese su contraseña para confirmar que desea cerrar sesión en sus otras sesiones de navegador en todos sus dispositivos.
+                    {{$t('Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.')}}
 
                     <div class="mt-4">
                         <TextInput

@@ -142,6 +142,18 @@ class UserSeeder extends Seeder
                 'role' => 'invitado',
             ],
             [
+                'name' => 'Toni',
+                'email' => 'toni@mail.com',
+                'password' => '12345678',
+                'role' => 'invitado',
+            ],
+            [
+                'name' => 'Richard',
+                'email' => 'richard@mail.com',
+                'password' => '12345678',
+                'role' => 'invitado',
+            ],
+            [
                 'name' => 'Invitado',
                 'email' => 'invitado@mail.com',
                 'password' => '12345678',

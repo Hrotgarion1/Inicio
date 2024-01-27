@@ -30,7 +30,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head :title="$t('Login')" />
+    <Head :title="$t('Log in')" />
 
     <AuthenticationCard>
         <template #logo>
@@ -82,7 +82,7 @@ const submit = () => {
                 </Link>
 
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    {{ $t('Login') }}
+                    {{ $t('Log in') }}
                 </PrimaryButton>
             </div>
         </form>
